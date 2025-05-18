@@ -309,7 +309,7 @@ class FileHandlingforWishList{
                 int stock = Integer.parseInt(pieces[10]);
                 
                 Item i = new Item(itemID,title,desc,price,makerName,category,makerID,stock);
-                WishList w = null; //crete items and ass list to wishlist of buyer
+                WishList w = null; //create items and add list to wishlist of buyer
                 Buyer b = null; //search for buyer and populate its wishlist
  
                 //b.getUserId()+","+b.getName()+","+b.getEmail()+itemId + "," + title + "," + price + "," +makerId+","+makerName+","+category+","+description+","+Stock;
@@ -556,6 +556,7 @@ class FileHandlingForOrders {
                     System.out.print("Buyer or Item not found, terminating order history");
                 else{
                     Order order = new Order(data[0], b, i);
+                      b.addOrder(order);
                     OrderList.add(order);
                 }
                
@@ -1486,6 +1487,10 @@ class Buyer extends User {
     public void viewAccountBalance() {
         System.out.println("Your current balance is: Rs. " + bankAccount.getBalance());
     }
+    
+    public void addOrder(Order order){
+        orders.add(order);
+    } 
 
     public void browseProducts() {
         Scanner scanner = new Scanner(System.in);
@@ -1923,7 +1928,8 @@ class Buyer extends User {
                 System.out.println("3. View WishList");
                 System.out.println("4. View Cart");
                 System.out.println("5. Leave a Review");
-                System.out.println("6. Logout");
+                System.out.println("6. View past orders");
+                System.out.println("7. Logout");
                 System.out.print("Enter your choice: ");
                 choice = scanner.nextInt();
                 scanner.nextLine();
@@ -2013,13 +2019,16 @@ class Buyer extends User {
                         leaveReview();
                         break;
                     case 6:
+                        pastOrders();
+                        break;
+                    case 7:
                         System.out.println("Logging out...");
                         break;
 
                     default:
                         System.out.println("Invalid option.");
                 }
-            } while (choice != 6);
+            } while (choice != 7);
 ////            scanner.close();
         }
         
@@ -2193,8 +2202,19 @@ class Buyer extends User {
     
             System.out.println("Thank you! Your review has been submitted.");
         }
-//        scanner.close();
+       scanner.close();
     }
+
+    public void pastOrders(){
+        if(orders.size()==0){
+            System.out.println("You have not placed any orders yet");
+            return;
+        }
+        for(int i=0;i<orders.size();i++){
+           System.out.println(orders.get(i));
+        }
+    }
+
     public void setMakerList(List<Maker> makers) {
         this.allMakers = makers;
     }
